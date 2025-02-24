@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Get,
   InternalServerErrorException,
   Param,
   Post,
@@ -37,7 +38,7 @@ export class IdentityValidateController {
     );
   }
 
-  @Put('upload-front')
+  @Put('upload-image')
   @UseInterceptors(FileInterceptor('file'))
   async uploadImage(
     @Body() body: { url: string },
@@ -50,8 +51,6 @@ export class IdentityValidateController {
     if (!url) {
       throw new BadRequestException('No se ha proporcionado ninguna URL');
     }
-    console.log('url:', url);
-    console.log('file:', file);
     try {
       await this.identityValidateService.uploadDocumentImage(url, file.buffer);
       return { message: 'Imagen subida exitosamente' };
@@ -61,22 +60,8 @@ export class IdentityValidateController {
     }
   }
 
-  @Put('upload-back/:url')
-  @UseInterceptors(FileInterceptor('back'))
-  async uploadBackImage(
-    @Param('url') url: string,
-    @UploadedFile() file: Express.Multer.File,
-  ) {
-    if (!file) {
-      throw new InternalServerErrorException('No back image uploaded');
-    }
-
-    try {
-      await this.identityValidateService.uploadDocumentImage(url, file.buffer);
-      return { message: 'Back image uploaded successfully' };
-    } catch (error) {
-      console.error('Error in uploadBackImage:', error.message);
-      throw new InternalServerErrorException('Failed to upload back image');
-    }
+  @Get('validations/:validationId')
+  async getValidations(@Param('validationId') validationId: string) {
+    return this.identityValidateService.getValidations(validationId);
   }
 }

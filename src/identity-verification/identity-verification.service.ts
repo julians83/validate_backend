@@ -9,8 +9,8 @@ export class IdentityValidateService {
   private readonly apiKey: string;
 
   constructor(private readonly configService: ConfigService) {
-    this.apiUrl = this.configService.get<string>('IdentityValidate_API_URL');
-    this.apiKey = this.configService.get<string>('IdentityValidate_API_KEY');
+    this.apiUrl = this.configService.get<string>('IDENTITY_VALIDATE_API_URL');
+    this.apiKey = this.configService.get<string>('IDENTITY_VALIDATE_API_KEY');
   }
 
   async validateDocument(
@@ -60,6 +60,26 @@ export class IdentityValidateService {
         error.response?.data || error.message,
       );
       throw new InternalServerErrorException('Error uploading document image');
+    }
+  }
+
+  async getValidations(validationId: string) {
+    try {
+      const response = await axios.get(
+        `${this.apiUrl}/validations/${validationId}`,
+        {
+          headers: {
+            'Truora-API-Key': this.apiKey,
+          },
+        },
+      );
+      return response.data;
+    } catch (error) {
+      console.error(
+        'Error en IdentityValidateService:',
+        error.response?.data || error.message,
+      );
+      throw new InternalServerErrorException('Error al obtener la validación');
     }
   }
 }

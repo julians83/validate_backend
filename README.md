@@ -1,99 +1,140 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Backend de Validación de Documentos de Identidad
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Este proyecto es un backend desarrollado con NestJS y npm, diseñado para una prueba técnica que consume una API de validación de documentos de identidad. El backend expone tres endpoints principales:
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+1. **POST**: Inicia el flujo de validación.
+2. **PUT**: Sube imágenes de los documentos.
+3. **GET**: Verifica el estado de la solicitud.
 
-## Description
+## Requisitos Previos
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- Node.js (versión 12 o superior)
+- npm (gestor de paquetes de Node.js)
 
-## Project setup
+## Instalación
 
-```bash
-$ pnpm install
+1. Clona el repositorio:
+
+   ```bash
+   git clone https://github.com/julians83/validate_backend
+   cd validate_backend
+   ```
+
+2. Instala las dependencias:
+
+   ```bash
+   npm install
+   ```
+
+## Configuración
+
+Antes de iniciar el servidor, configura las variables de entorno. Crea un archivo `.env` en la raíz del proyecto con el siguiente contenido:
+
+```env
+IDENTITY_VALIDATE_API_URL=tu_url_de_api
+IDENTITY_VALIDATE_API_KEY=tu_clave_de_api
+PORT=3001
 ```
 
-## Compile and run the project
+## Ejecución del Servidor
+
+Para iniciar el servidor en modo de desarrollo:
 
 ```bash
-# development
-$ pnpm run start
-
-# watch mode
-$ pnpm run start:dev
-
-# production mode
-$ pnpm run start:prod
+npm run start:dev
 ```
 
-## Run tests
+El servidor estará disponible en `http://localhost:3001`.
 
-```bash
-# unit tests
-$ pnpm run test
+## Endpoints Disponibles
 
-# e2e tests
-$ pnpm run test:e2e
+### 1. Iniciar Flujo de Validación
 
-# test coverage
-$ pnpm run test:cov
+- **URL**: `/identity-validate/validate-document`
+- **Método**: `POST`
+- **Descripción**: Inicia el proceso de validación de un documento de identidad.
+
+**Ejemplo de solicitud**:
+
+```json
+{
+  "country": "CO",
+  "document_type": "NATIONAL ID",
+  "accountId": "123456",
+  "type": "front"
+}
 ```
 
-## Deployment
+**Respuesta exitosa (200 OK)**:
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
-```bash
-$ pnpm install -g mau
-$ mau deploy
+```json
+{
+  "validation_id": "abc123",
+  "message": "Flujo de validación iniciado correctamente."
+}
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+### 2. Subir Imagen del Documento
 
-## Resources
+- **URL**: `/identity-validate/upload-image`
+- **Método**: `PUT`
+- **Descripción**: Sube la imagen del documento asociado al `validation_id`.
 
-Check out a few resources that may come in handy when working with NestJS:
+**Parámetros del cuerpo**:
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+- `url`: URL proporcionada para subir la imagen.
 
-## Support
+**Ejemplo de solicitud**:
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+- **Encabezados**:
 
-## Stay in touch
+  ```
+  Content-Type: multipart/form-data
+  ```
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+- **Cuerpo**: Archivo de imagen binario bajo el campo `file`.
 
-## License
+**Respuesta exitosa (200 OK)**:
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+```json
+{
+  "message": "Imagen subida exitosamente"
+}
+```
+
+### 3. Verificar Estado de la Solicitud
+
+- **URL**: `/identity-validate/validations/:validationId`
+- **Método**: `GET`
+- **Descripción**: Consulta el estado actual de la validación.
+
+**Parámetros de ruta**:
+
+- `validationId`: ID de la validación.
+
+**Respuesta exitosa (200 OK)**:
+
+```json
+{
+  "validation_id": "abc123",
+  "status": "pending",
+  "message": "La validación está en proceso."
+}
+```
+
+## Manejo de Errores
+
+El backend maneja diferentes códigos de estado HTTP para indicar el resultado de las operaciones:
+
+- `200 OK`: Operación exitosa.
+- `400 Bad Request`: Solicitud malformada o datos inválidos.
+- `404 Not Found`: Recurso no encontrado (por ejemplo, `validation_id` inexistente).
+- `500 Internal Server Error`: Error interno del servidor.
+
+## Documentación Adicional
+
+Para más detalles sobre el uso de NestJS, consulta la [documentación oficial](https://docs.nestjs.com/).
+
+## Licencia
+
+Este proyecto se distribuye bajo la licencia MIT. Consulta el archivo `LICENSE` para más información. 
